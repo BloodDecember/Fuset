@@ -57,9 +57,34 @@ namespace Fuset
         private SQLiteCommand m_sqlCmd;
         SQLiteDataReader sqlite_datareader;
 
-        public static void KillPaint(string name)
+        public void screen()
         {
-            System.Diagnostics.Process[] procs = null;
+            Graphics graph = null;
+
+            var bmp = new Bitmap(Screen.PrimaryScreen.Bounds.Width, Screen.PrimaryScreen.Bounds.Height);
+
+            graph = Graphics.FromImage(bmp);
+
+            graph.CopyFromScreen(0, 0, 0, 0, bmp.Size);
+            try
+            {
+                bmp.Save(Application.StartupPath + @"\reload\" + Convert.ToString(DateTime.Now).Replace(":", "_") + ".jpg");
+            }
+            catch (System.Runtime.InteropServices.ExternalException)
+            {
+                DirectoryInfo dirInfo = new DirectoryInfo(Application.StartupPath + @"\reload");
+                if (!dirInfo.Exists)
+                {
+                    dirInfo.Create();
+                }
+                bmp.Save(Application.StartupPath + @"\reload\" + Convert.ToString(DateTime.Now).Replace(":", "_") + ".jpg");
+
+            }
+        }
+
+        public static void KillChrome(string name)
+        {
+            Process[] procs = null;
 
             try
             {
@@ -72,8 +97,8 @@ namespace Fuset
                         item.Kill();
                     }
                 }
-                 
-                
+
+
             }
             finally
             {
